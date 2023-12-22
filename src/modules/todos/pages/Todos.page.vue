@@ -3,7 +3,7 @@
         Lista de tareas
     </p>
     <section class="flex gap-2 flex-col lg:flex-row">
-        <div class="flex-1 border rounded-xl px-2 shadow-sm py-2">
+        <div class="basis-2/4 border rounded-xl px-2 shadow-sm py-2">
             <p class="text-center font-medium ">Añadir tarea</p>
             <div class="flexcol">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tarea</label>
@@ -24,7 +24,7 @@
             </div>
 
         </div>
-        <div class="flex-1 border rounded-xl py-2 px-2 w-full">
+        <div class="basis-2/4 border rounded-xl py-2 px-2 w-full">
             <TodoTable 
             :todos="todos" :current-page="currentPage" :total-pages="totalPages"
             @edit-task="editTask($event)"
@@ -32,7 +32,9 @@
             />
         </div>
     </section>
-    <ModalEditTodo :show-modal="showModal" @change-show-modal="changeShowModal" :task-edit="taskEdit"/>
+    <Transition>
+        <ModalEditTodo v-if="showModal" :show-modal="showModal" @change-show-modal="changeShowModal" :task-edit="taskEdit"/>
+    </Transition>
 </template>
 
 <script setup lang="ts">
@@ -45,6 +47,8 @@ import { Todo } from '../types/index';
 import { ref } from 'vue';
 
 const currentDate = new Date();
+currentDate.setDate(currentDate.getDate() + 1);
+currentDate.setHours(currentDate.getHours() + 2);
 const taskEdit = ref<Todo>({
     name: '',
     description: '',
@@ -57,7 +61,7 @@ const formattedDate = new Intl.DateTimeFormat('es-ES', {
   year: 'numeric',
   month: '2-digit',
   day: '2-digit',
-}).format(currentDate);
+}).format(currentDate).split('/').reverse().join('-');
 
 const formattedTime = new Intl.DateTimeFormat('en-US', {
   hour: '2-digit',
